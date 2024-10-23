@@ -44,7 +44,7 @@ public class ProductListController extends Controller implements TypeValidator, 
         return "조회할 상품번호를 입력하세요(메인메뉴: M, 종료: Q):";
     }
 
-    @Override
+    @Override // 뷰에서 처리 후 결과에 대한 출력을 하게됨
     public void view() {
         ProductInfoService service = BeanContainer.getBean(ProductInfoService.class);
         List<Product> items = service.getList();
