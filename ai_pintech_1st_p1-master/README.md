@@ -65,13 +65,18 @@
 
 ---
 ## DDD(Domain Driven Design) : 도메인 주도 설계
-> Domain : 전문가 영역 - 게시판 도메인, 주문 도메인, 상품 도메인, 회원 도메인 ...
+> Domain : 전문가 영역 - 게시판 도메인, 주문 도메인, 상품 도메인, 회원 도메인 ... ex) 도메인지식, 도메인 주도방식
 
-- 표현 계층 : View
+- 표현 계층 : View // 출력
 - 도메인 계층
-- 인프라 계층  : 공통 인프라(DB ...)
+- 인프라 계층  : 공통 인프라(DB ...) // 모든 도메인이 공유하는 부분 - 예) 데이터 베이스
 
 > MSA(Microservice Architecture)
+< 이미지 참고 >
+![image](https://github.com/user-attachments/assets/54bc3652-790c-44f8-aa08-4b27faeecfd9)
+
+ㄴ 왼쪽은 예전 방식인데 한쪽이 소스 망치면 같이 망하는데 오른쪽은 서로 간섭을 최소화하고 추가추가가 가능함! 이런방식이 MSA방식!
+
 
 ## 소스 분석
 - [도메인 구조 분석](https://github.com/yonggyo1125/ai_pintech_1st_p1/blob/master/STRUCTURE.md)
