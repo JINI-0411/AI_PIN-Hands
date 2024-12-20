@@ -1,0 +1,142 @@
+const todo = {
+  tpl: null,
+  items: [], // 작업 목록
+
+  // 초기에 실행할 영역
+  init(){
+    // 템플릿 HTML 추출
+    this.tpl = document.getElementById("tpl").innerHTML;
+
+  },
+  // 작업 등록
+  add(title, description, deadline) {
+    const seq = Date.now();
+    this.items.push({ seq, title, description, deadline, done: false });
+
+    this.render(); // 화면 갱신 / 추가하고 나면 갱신해줘야하니까
+  },
+  // 작업 삭제
+  remove(seq) {
+    // seq로 작업 목록 순서 번호(index) 조회
+    const index = this.items.findIndex((item) => item.seq === seq);
+
+    // splice로 해당 순서 번호 항목 제거
+    this.items.splice(index, 1);
+
+    // 화면 갱신
+    this.render();
+  },
+  // 작업 목록 출력, 갱신
+  render() {
+    const itemsEl = document.querySelector(".items");
+    itemsEl.innerHTML = ""; // 내용을 추가하면 2개가 추가되는 현상으로 비워주고 하게
+    
+    const domParser = new DOMParser();
+
+    for (const {seq, title, description, deadline} of this.items) {
+    
+      let html = this.tpl;
+      html = html
+        .replace(/#{seq}/g, seq) // 정형표현식? g는 전체
+        .replace(/#{title}/g, title)
+        .replace(/#{description}/g, description.replace(/\n/g, "<br>")) // 줄개행문자 br태그로 변경시켰음
+        .replace(/#{deadline}/g, deadline);
+      
+      const dom = domParser.parseFromString(html, "text.html");
+      const itemEl = dom.querySelector("li");
+      itemsEl.append(itemEl);
+
+      const titWrapEl = itemEl.querySelector(".tit-wrap");
+      titWrapEl.addEventListener("click", function() {
+        todo.accodianView(this.parentElement);
+      });
+    }
+  },
+
+  accodianView(el) {
+    const items = document.querySelectorAll(".items > .item");
+    items.forEach(item => item.classList.remove("on"));
+    
+    el.classList.add("on");
+  },
+};
+
+window.addEventListener("DOMContentLoaded", function () {
+  // 초기화
+  todo.init();
+  
+  // 양식 태그의 기본 동작 차단
+  frmTodo.addEventListener("submit", function (e) {
+    e.preventDefault();
+
+    /**
+     * 0. 검증 실패 메세지 출력화면 초기화
+     * 1. 필수 항목 검증
+     * 2. 일정 추가
+     * 3. 양식 초기화
+     */
+    try {
+      // 0. 검증 실패 메세지 출력화면 초기화
+      const errors = document.getElementsByClassName("error");
+      for (const el of errors) {
+        el.innerText = "";
+        if (el.classList.contains("dn")) {
+          el.classList.add("dn");
+        }
+      }
+
+      const formData = {};
+
+      // 1. 유효성 검사 S
+      const requiredFields = {
+        title: "작업 제목을 입력하세요.",
+        deadline: "마감일을 입력하세요.",
+        description: "작업 내용을 입력하세요.",
+      };
+
+      for (const [field, message] of Object.entries(requiredFields)) {
+        const value = frmTodo[field].value.trim();
+        if (!value) {
+          throw new Error(JSON.stringify({ field, message }));
+        }
+
+        // 마감일인 경우 현재 날짜보다 이전은 될 수 없음
+        if (field === "deadline" && new Date(value) - new Date() < 0) {
+          throw new Error(
+            JSON.stringify({ field, message: "현재 날짜 이후로 입력하세요." })
+          );
+        }
+
+        // 입력 데이터 추가
+        formData[field] = value;
+      }
+
+      // 1. 유효성 검사 E
+
+
+      // 2. 작업 등록 
+      const { title, deadline, description } = formData;
+      todo.add(title, description, deadline);
+
+
+      // 3. 양식 초기화
+      frmTodo.title.value = "";
+      frmTodo.deadline.value = "";
+      frmTodo.description.value = "";
+
+      frmTodo.title.focus();
+
+    } catch (err) {
+      const { field, message } = JSON.parse(err.message);
+      const el = document.getElementById(`error-${field}`);
+
+      // console.log(err.message, el);
+
+      if (el) {
+        el.innerText = message;
+        el.classList.remove("dn");
+        el.focus();
+      }
+    }
+  });
+});

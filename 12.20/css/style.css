@@ -1,0 +1,21 @@
+@import url("https://fonts.googleapis.com/css2?family=Jua&family=Noto+Sans+KR:wght@100..900&family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap");
+* {
+  font-family: "Jua", serif;
+}
+
+/* 공통 S */
+.dn {
+  display: none !important;
+}
+/* 공통 E */
+
+/* 할일 목록 S */
+.items > .item .description {
+  display: none;
+}
+
+.items > .item.on .description{
+ display: block;
+}  /* 처음엔 안보이는데 클릭하면 보이게 할 거 */
+
+/* 할일 목록 E */
