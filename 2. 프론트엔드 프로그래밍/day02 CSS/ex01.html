@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+  </head>
+  <body>
+    <style>
+      ul::after {
+        content: "AFTER";
+      }
+
+      ul::before {
+        content: "";
+        background: orange;
+        width: 100px;
+        height: 100px;
+        display: block; /*넓이, 높이를 적용할 수 있는 블록 형태가 되는거*/
+      }
+    </style>
+    <ul>
+      <li>메뉴1</li>
+      <li>메뉴2</li>
+      <li>메뉴3</li>
+    </ul>
+  </body>
+</html>
